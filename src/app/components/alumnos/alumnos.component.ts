@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AlumnoDto } from '../../models/alumno.model';
 
 interface Alumno {
   id: number;
@@ -16,19 +18,19 @@ interface Alumno {
   templateUrl: './alumnos.component.html'
 })
 export class AlumnosComponent implements OnInit {
-  alumnos: Alumno[] = [];
-  alumno: Partial<Alumno> = {};
+  alumnos: AlumnoDto[] = [];
+  alumno: Partial<AlumnoDto> = {};
   editando: Alumno | null = null;
   error = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.cargarAlumnos();
   }
 
   cargarAlumnos() {
-    this.http.get<Alumno[]>('/api/alumnos').subscribe({
+    this.http.get<AlumnoDto[]>('/api/alumnos').subscribe({
       next: res => this.alumnos = res,
       error: err => this.error = 'No se pudieron cargar los alumnos.'
     });
@@ -74,5 +76,9 @@ export class AlumnosComponent implements OnInit {
     this.editando = null;
     this.alumno = {};
     this.error = '';
+  }
+
+  evaluarAlumno(alumno: AlumnoDto) {
+  this.router.navigate(['/evaluacion', alumno.id]);
   }
 }

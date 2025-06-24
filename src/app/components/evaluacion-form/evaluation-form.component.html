@@ -1,13 +1,21 @@
-<h2>Evaluación rápida de alumno</h2>
+@if (alumno) {
+  <div class="mb-4 d-flex flex-column flex-md-row align-items-md-center gap-3">
+    <span class="fs-3 fw-bold" style="color: #20B2AA;">
+      <i class="bi bi-person-circle"></i> {{ alumno.nombreCompleto }}
+    </span>
+    <span class="text-secondary ms-2">
+      <i class="bi bi-cake"></i> {{ alumno.edad }} años
+    </span>
+    <span class="text-secondary ms-2">
+      <i class="bi bi-gender-ambiguous"></i> {{ alumno.sexo }}
+    </span>
+  </div>
+}
+@else {
+  <h2 class="text-info">Evaluación rápida de alumno</h2>
+}
 
 <form (ngSubmit)="enviar()" #evalForm="ngForm">
-  <div class="mb-2">
-    <input class="form-control" [(ngModel)]="evaluacion.alumno" name="alumno" placeholder="Nombre del alumno"
-      required />
-  </div>
-  <div class="mb-2">
-    <input class="form-control" [(ngModel)]="evaluacion.grupo" name="grupo" placeholder="Grupo" required />
-  </div>
   @for (aspecto of evaluacion.aspectos; track aspecto.nombre; let i = $index) {
   <div class="mb-2">
     <label><b>{{ aspecto.nombre }}</b></label>

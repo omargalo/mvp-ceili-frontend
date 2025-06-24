@@ -10,6 +10,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   // Rutas protegida por el guard
+   { path: 'evaluacion/:id', component: EvaluationFormComponent, canActivate: [authGuard] },
   { path: 'evaluacion', component: EvaluationFormComponent, canActivate: [authGuard] },
   { path: 'alumnos', component: AlumnosComponent, canActivate: [authGuard] },
   { path: 'chat', component: ChatComponent, canActivate: [authGuard] },

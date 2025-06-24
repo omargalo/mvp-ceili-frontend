@@ -5,8 +5,7 @@ export interface AspectoEvaluado {
 
 export interface Evaluacion {
   alumno: string;
-  grupo: string;
-  fecha: string; // ISO
+  fecha: string;
   aspectos: AspectoEvaluado[];
   observacionDocente: string;
 }
