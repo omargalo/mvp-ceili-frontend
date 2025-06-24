@@ -1,0 +1,66 @@
+<nav class="navbar navbar-expand-lg navbar-light mb-4">
+  <div class="container-fluid">
+    <a routerLink="/" class="navbar-brand d-inline-block me-2" style="vertical-align:middle;">
+      <i class="bi bi-house-fill text-white"></i>
+    </a>
+    <span class="navbar-text fw-bold text-white d-none d-lg-inline">
+      MVP Riesgo Académico
+      @if (autenticado) {
+        <span class="ms-3 text-white">
+          <i class="bi bi-person-circle me-1"></i>{{ docenteNombre }}
+        </span>
+      }
+    </span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav ms-auto">
+        @if (!autenticado) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">
+              <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+          </li>
+        }
+        @if (autenticado) {
+          <li class="nav-item">
+            <a class="nav-link" href="#" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+            </a>
+          </li>
+        }
+        @if (!autenticado) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register" routerLinkActive="active">
+              <i class="bi bi-person-plus"></i> Registro
+            </a>
+          </li>
+        }
+        @if (autenticado) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/alumnos" routerLinkActive="active">
+              <i class="bi bi-people"></i> Alumnos
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/evaluacion" routerLinkActive="active">
+              <i class="bi bi-clipboard2-check me-1"></i> Evaluación
+            </a>
+          </li>
+        <!--<li class="nav-item">
+            <a class="nav-link" routerLink="/chat" routerLinkActive="active">
+              <i class="bi bi-chat-dots"></i> Chat
+            </a>
+          </li> -->
+        }
+      </ul>
+      @if (autenticado) {
+        <span class="navbar-text text-white d-lg-none mt-2">
+          <i class="bi bi-person-circle me-1"></i>{{ docenteNombre }}
+        </span>
+      }
+    </div>
+  </div>
+</nav>

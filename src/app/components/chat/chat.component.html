@@ -1,0 +1,16 @@
+<h2>Chat con Azure OpenAI</h2>
+<input [(ngModel)]="userMessage" placeholder="Escribe tu pregunta..." />
+<button (click)="enviar()">Enviar</button>
+
+@if (assistantResponse) {
+  <div class="mt-3">
+    <b>Asistente:</b>
+    <div>{{ assistantResponse }}</div>
+  </div>
+}
+
+@if (error) {
+  <div class="mt-3">
+    <span class="text-danger">{{ error }}</span>
+  </div>
+}

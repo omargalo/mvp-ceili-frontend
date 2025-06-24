@@ -1,0 +1,27 @@
+:host ::ng-deep .navbar {
+  background: linear-gradient(90deg, #20B2AA, #0076BE, #E1007C);
+}
+
+:host ::ng-deep .navbar-brand,
+:host ::ng-deep .navbar-text,
+:host ::ng-deep .nav-link {
+  color: #fff !important;
+  text-shadow: 1px 1px 4px #0006;
+}
+
+:host ::ng-deep .nav-link.active {
+  border-bottom: 2px solid #fff;
+  font-weight: 600;
+}
+
+:host ::ng-deep .navbar-toggler {
+  border-color: #fff;
+}
+:host ::ng-deep .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+:host ::ng-deep .bi-house-fill,
+:host ::ng-deep .bi-person-circle {
+  color: #fff !important;
+}

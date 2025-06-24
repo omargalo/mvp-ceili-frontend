@@ -1,0 +1,29 @@
+<h2>Evaluación rápida de alumno</h2>
+
+<form (ngSubmit)="enviar()" #evalForm="ngForm">
+  <div class="mb-2">
+    <input class="form-control" [(ngModel)]="evaluacion.alumno" name="alumno" placeholder="Nombre del alumno"
+      required />
+  </div>
+  <div class="mb-2">
+    <input class="form-control" [(ngModel)]="evaluacion.grupo" name="grupo" placeholder="Grupo" required />
+  </div>
+  @for (aspecto of evaluacion.aspectos; track aspecto.nombre; let i = $index) {
+  <div class="mb-2">
+    <label><b>{{ aspecto.nombre }}</b></label>
+    <select class="form-select" [(ngModel)]="evaluacion.aspectos[i].riesgo" [name]="'riesgo' + i" required>
+      <option value="Bajo">Bajo</option>
+      <option value="Medio">Medio</option>
+      <option value="Alto">Alto</option>
+    </select>
+  </div>
+  }
+  <div class="mb-2">
+    <textarea class="form-control" rows="2" [(ngModel)]="evaluacion.observacionDocente" name="observacion"
+      placeholder="Observación del docente (opcional)">
+    </textarea>
+  </div>
+  <button type="submit" class="btn btn-primary" [disabled]="!evalForm.form.valid">
+    Enviar evaluación
+  </button>
+</form>

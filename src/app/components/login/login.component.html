@@ -1,0 +1,17 @@
+<h2>Iniciar sesión</h2>
+@if (loading) {
+  <div class="text-center my-3">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <div>Cargando...</div>
+  </div>
+}
+<form (ngSubmit)="login()">
+  <input class="form-control" [(ngModel)]="credenciales.email" name="email" placeholder="Correo electrónico" type="email" required>
+  <input class="form-control" [(ngModel)]="credenciales.password" name="password" placeholder="Contraseña" type="password" required>
+  <button class="btn btn-primary" type="submit">Entrar</button>
+</form>
+@if (error) {
+  <div class="alert alert-danger mt-2">{{ error }}</div>
+}
