@@ -1,6 +1,15 @@
-@if (alumno) {
+@if (loading) {
+  <div class="text-center my-3">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <div>Cargando datos del alumno...</div>
+  </div>
+}
+@else if (alumno) {
+  <h4 class="text-info">Evaluación del alumno:</h4>
   <div class="mb-4 d-flex flex-column flex-md-row align-items-md-center gap-3">
-    <span class="fs-3 fw-bold" style="color: #20B2AA;">
+    <span class="fs-4 fw-bold" style="color: #20B2AA;">
       <i class="bi bi-person-circle"></i> {{ alumno.nombreCompleto }}
     </span>
     <span class="text-secondary ms-2">
@@ -12,7 +21,7 @@
   </div>
 }
 @else {
-  <h2 class="text-info">Evaluación rápida de alumno</h2>
+  <h2 class="text-info">Evaluación del alumno</h2>
 }
 
 <form (ngSubmit)="enviar()" #evalForm="ngForm">

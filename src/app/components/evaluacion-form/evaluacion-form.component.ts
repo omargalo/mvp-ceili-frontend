@@ -69,17 +69,23 @@ export class EvaluationFormComponent implements OnInit {
   }
 
   enviar() {
-    if (this.alumno) {
-      this.evaluacion.alumno = this.alumno.nombreCompleto;
-    }
-    // Aquí iría la llamada a tu servicio backend
-    console.log('Evaluación enviada:', this.evaluacion);
-    alert('Evaluación enviada:\n' + JSON.stringify(this.evaluacion, null, 2));
-    // Limpia el formulario si lo deseas
-    this.evaluacion.aspectos = this.aspectosBase.map((nombre) => ({
-      nombre,
-      riesgo: 'Bajo',
-    }));
-    this.evaluacion.observacionDocente = '';
+    if (!this.alumno) return;
+
+    const evaluacionPost = {
+      alumnoId: this.alumno.id,
+      aspectos: this.evaluacion.aspectos,
+      observacionDocente: this.evaluacion.observacionDocente,
+      fecha: new Date().toISOString(),
+    };
+
+    this.http.post('/api/evaluaciones', evaluacionPost).subscribe({
+      next: (resp) => {
+        alert('¡Evaluación enviada correctamente!');
+        // Opcional: limpiar formulario, redirigir, etc.
+      },
+      error: (err) => {
+        alert('Error al enviar la evaluación.');
+      },
+    });
   }
 }
