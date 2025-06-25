@@ -1,46 +1,66 @@
 @if (loading) {
-  <div class="text-center my-3">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-    <div>Cargando datos del alumno...</div>
+<div class="text-center my-3">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Cargando...</span>
   </div>
+  <div>Cargando datos del alumno...</div>
+</div>
 }
 @else if (alumno) {
-  <h4 class="text-info">Evaluación del alumno:</h4>
-  <div class="mb-4 d-flex flex-column flex-md-row align-items-md-center gap-3">
-    <span class="fs-4 fw-bold" style="color: #20B2AA;">
-      <i class="bi bi-person-circle"></i> {{ alumno.nombreCompleto }}
-    </span>
-    <span class="text-secondary ms-2">
-      <i class="bi bi-cake"></i> {{ alumno.edad }} años
-    </span>
-    <span class="text-secondary ms-2">
-      <i class="bi bi-gender-ambiguous"></i> {{ alumno.sexo }}
-    </span>
-  </div>
+<h4 class="text-info">Evaluación del alumno:</h4>
+<div class="mb-4 d-flex flex-column flex-md-row align-items-md-center gap-3">
+  <span class="fs-4 fw-bold" style="color: #20B2AA;">
+    <i class="bi bi-person-circle"></i> {{ alumno.nombreCompleto }}
+  </span>
+  <span class="text-secondary ms-2">
+    <i class="bi bi-cake"></i> {{ alumno.edad }} años
+  </span>
+  <span class="text-secondary ms-2">
+    <i class="bi bi-gender-ambiguous"></i> {{ alumno.sexo }}
+  </span>
+</div>
 }
 @else {
-  <h2 class="text-info">Evaluación del alumno</h2>
+<h2 class="text-info">Evaluación del alumno</h2>
 }
 
-<form (ngSubmit)="enviar()" #evalForm="ngForm">
-  @for (aspecto of evaluacion.aspectos; track aspecto.nombre; let i = $index) {
-  <div class="mb-2">
-    <label><b>{{ aspecto.nombre }}</b></label>
-    <select class="form-select" [(ngModel)]="evaluacion.aspectos[i].riesgo" [name]="'riesgo' + i" required>
-      <option value="Bajo">Bajo</option>
-      <option value="Medio">Medio</option>
-      <option value="Alto">Alto</option>
-    </select>
+<!-- Bootstrap Tabs -->
+<ul class="nav nav-tabs mb-3" id="categoriaTabs" role="tablist">
+  @for (cat of categorias; track cat.nombre; let catIdx = $index) {
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" [class.active]="catIdx === 0" id="tab-{{catIdx}}" data-bs-toggle="tab"
+      [attr.data-bs-target]="'#contenido-' + catIdx" type="button" role="tab"
+      [attr.aria-controls]="'contenido-' + catIdx" [attr.aria-selected]="catIdx === 0">
+      {{ cat.nombre }}
+    </button>
+  </li>
+  }
+</ul>
+
+<div class="tab-content" id="categoriaTabsContent">
+  @for (cat of categorias; track cat.nombre; let catIdx = $index) {
+  <div class="tab-pane fade" [class.show]="catIdx === 0" [class.active]="catIdx === 0" id="contenido-{{catIdx}}"
+    role="tabpanel" [attr.aria-labelledby]="'tab-' + catIdx">
+    @for (asp of cat.aspectos; track asp.nombre; let aspIdx = $index) {
+    <div class="mb-2">
+      <label><b>{{ asp.nombre }}</b></label>
+      <select class="form-select" [(ngModel)]="cat.aspectos[aspIdx].riesgo" [name]="'riesgo-' + catIdx + '-' + aspIdx"
+        required>
+        <option value="Bajo">Bajo</option>
+        <option value="Medio">Medio</option>
+        <option value="Alto">Alto</option>
+      </select>
+    </div>
+    }
   </div>
   }
-  <div class="mb-2">
-    <textarea class="form-control" rows="2" [(ngModel)]="evaluacion.observacionDocente" name="observacion"
-      placeholder="Observación del docente (opcional)">
-    </textarea>
-  </div>
-  <button type="submit" class="btn btn-primary" [disabled]="!evalForm.form.valid">
-    Enviar evaluación
-  </button>
-</form>
+</div>
+
+<div class="mb-2 mt-3">
+  <textarea class="form-control" rows="2" [(ngModel)]="evaluacion.observacionDocente" name="observacion"
+    placeholder="Observación del docente (opcional)">
+  </textarea>
+</div>
+<button type="button" class="btn btn-primary" (click)="enviar()">
+  Enviar evaluación
+</button>

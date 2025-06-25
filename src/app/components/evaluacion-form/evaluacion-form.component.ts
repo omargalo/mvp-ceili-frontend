@@ -4,6 +4,11 @@ import { Evaluacion, AspectoEvaluado } from '../../models/evaluacion.model';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
+interface CategoriaAspecto {
+  nombre: string;
+  aspectos: AspectoEvaluado[];
+}
+
 interface Alumno {
   id: number;
   nombreCompleto: string;
@@ -22,28 +27,68 @@ export class EvaluationFormComponent implements OnInit {
   loading = false;
   error = '';
 
-  aspectosBase = [
-    'Desempeño académico',
-    'Participación en clase',
-    'Estado de ánimo',
-    'Relación con compañeros',
-    'Asistencia y puntualidad',
-    'Higiene y autocuidado',
-    'Acompañamiento familiar',
+  // CATEGORÍAS Y ASPECTOS
+  categorias: CategoriaAspecto[] = [
+    {
+      nombre: 'Desempeño Académico',
+      aspectos: [
+        { nombre: 'Comprensión lectora', riesgo: 'Bajo' },
+        { nombre: 'Resolución de problemas matemáticos', riesgo: 'Bajo' },
+        { nombre: 'Expresión escrita', riesgo: 'Bajo' },
+        { nombre: 'Participación en proyectos/tareas', riesgo: 'Bajo' },
+        { nombre: 'Atención y concentración', riesgo: 'Bajo' }
+      ]
+    },
+    {
+      nombre: 'Socioemocional',
+      aspectos: [
+        { nombre: 'Estado de ánimo general', riesgo: 'Bajo' },
+        { nombre: 'Autoestima', riesgo: 'Bajo' },
+        { nombre: 'Gestión de emociones', riesgo: 'Bajo' },
+        { nombre: 'Manejo de frustración', riesgo: 'Bajo' },
+        { nombre: 'Actitud ante el aprendizaje', riesgo: 'Bajo' }
+      ]
+    },
+    {
+      nombre: 'Relaciones Interpersonales',
+      aspectos: [
+        { nombre: 'Relación con compañeros', riesgo: 'Bajo' },
+        { nombre: 'Relación con docentes', riesgo: 'Bajo' },
+        { nombre: 'Resolución de conflictos', riesgo: 'Bajo' },
+        { nombre: 'Trabajo en equipo', riesgo: 'Bajo' },
+        { nombre: 'Integración al grupo', riesgo: 'Bajo' }
+      ]
+    },
+    {
+      nombre: 'Hábitos y Rutinas',
+      aspectos: [
+        { nombre: 'Asistencia', riesgo: 'Bajo' },
+        { nombre: 'Puntualidad', riesgo: 'Bajo' },
+        { nombre: 'Cumplimiento de tareas', riesgo: 'Bajo' },
+        { nombre: 'Organización de materiales', riesgo: 'Bajo' },
+        { nombre: 'Autonomía en el trabajo escolar', riesgo: 'Bajo' }
+      ]
+    },
+    {
+      nombre: 'Acompañamiento Familiar',
+      aspectos: [
+        { nombre: 'Comunicación con la familia', riesgo: 'Bajo' },
+        { nombre: 'Interés y apoyo familiar', riesgo: 'Bajo' },
+        { nombre: 'Estabilidad emocional en el hogar', riesgo: 'Bajo' },
+        { nombre: 'Supervisión de tareas', riesgo: 'Bajo' },
+        { nombre: 'Participación en reuniones escolares', riesgo: 'Bajo' }
+      ]
+    }
   ];
+
   evaluacion: Evaluacion = {
     alumno: '',
     fecha: new Date().toISOString(),
-    aspectos: [],
+    aspectos: [], // No se usa directamente en el form, pero se llena al enviar.
     observacionDocente: '',
   };
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {
-    this.evaluacion.aspectos = this.aspectosBase.map((nombre) => ({
-      nombre,
-      riesgo: 'Bajo',
-    }));
-  }
+  constructor(private route: ActivatedRoute, private http: HttpClient) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -57,7 +102,6 @@ export class EvaluationFormComponent implements OnInit {
     this.http.get<Alumno>(`/api/alumnos/${id}`).subscribe({
       next: (data) => {
         this.alumno = data;
-        // Prellenar nombre en la evaluación:
         this.evaluacion.alumno = data.nombreCompleto;
         this.loading = false;
       },
@@ -71,9 +115,12 @@ export class EvaluationFormComponent implements OnInit {
   enviar() {
     if (!this.alumno) return;
 
+    // Junta todos los aspectos de todas las categorías en un solo arreglo plano
+    const aspectos: AspectoEvaluado[] = this.categorias.flatMap(c => c.aspectos);
+
     const evaluacionPost = {
       alumnoId: this.alumno.id,
-      aspectos: this.evaluacion.aspectos,
+      aspectos,
       observacionDocente: this.evaluacion.observacionDocente,
       fecha: new Date().toISOString(),
     };
