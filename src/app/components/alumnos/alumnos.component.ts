@@ -15,7 +15,7 @@ interface Alumno {
   selector: 'app-alumnos',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './alumnos.component.html'
+  templateUrl: './alumnos.component.html',
 })
 export class AlumnosComponent implements OnInit {
   alumnos: AlumnoDto[] = [];
@@ -31,21 +31,23 @@ export class AlumnosComponent implements OnInit {
 
   cargarAlumnos() {
     this.http.get<AlumnoDto[]>('/api/alumnos').subscribe({
-      next: res => this.alumnos = res,
-      error: err => this.error = 'No se pudieron cargar los alumnos.'
+      next: (res) => (this.alumnos = res),
+      error: (err) => (this.error = 'No se pudieron cargar los alumnos.'),
     });
   }
 
   guardarAlumno() {
     if (this.editando) {
       // Editar
-      this.http.put<Alumno>(`/api/alumnos/${this.editando.id}`, this.alumno).subscribe({
-        next: () => {
-          this.cargarAlumnos();
-          this.cancelar();
-        },
-        error: err => this.error = 'Error al editar alumno.'
-      });
+      this.http
+        .put<Alumno>(`/api/alumnos/${this.editando.id}`, this.alumno)
+        .subscribe({
+          next: () => {
+            this.cargarAlumnos();
+            this.cancelar();
+          },
+          error: (err) => (this.error = 'Error al editar alumno.'),
+        });
     } else {
       // Crear
       this.http.post<Alumno>('/api/alumnos', this.alumno).subscribe({
@@ -53,7 +55,7 @@ export class AlumnosComponent implements OnInit {
           this.cargarAlumnos();
           this.cancelar();
         },
-        error: err => this.error = 'Error al agregar alumno.'
+        error: (err) => (this.error = 'Error al agregar alumno.'),
       });
     }
   }
@@ -67,7 +69,7 @@ export class AlumnosComponent implements OnInit {
     if (confirm('¿Eliminar este alumno?')) {
       this.http.delete(`/api/alumnos/${id}`).subscribe({
         next: () => this.cargarAlumnos(),
-        error: err => this.error = 'Error al eliminar alumno.'
+        error: (err) => (this.error = 'Error al eliminar alumno.'),
       });
     }
   }
@@ -79,6 +81,10 @@ export class AlumnosComponent implements OnInit {
   }
 
   evaluarAlumno(alumno: AlumnoDto) {
-  this.router.navigate(['/evaluacion', alumno.id]);
+    this.router.navigate(['/evaluacion', alumno.id]);
+  }
+
+  verResumen(alumno: AlumnoDto) {
+    this.router.navigate(['/resumen', alumno.id]);
   }
 }

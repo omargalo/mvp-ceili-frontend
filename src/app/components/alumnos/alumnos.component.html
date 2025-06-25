@@ -32,7 +32,7 @@
   <thead>
     <tr>
       <th>Nombre</th>
-      <th>Edad</th>
+      <th>Resumen</th>
       <th>Evaluación</th>
       <th>Acciones</th>
     </tr>
@@ -41,7 +41,11 @@
     @for (alumno of alumnos; track alumno.id) {
     <tr>
       <td>{{ alumno.nombreCompleto }}</td>
-      <td>{{ alumno.edad }}</td>
+      <td>
+        <button class="btn btn-sm btn-info" (click)="verResumen(alumno)">
+          <i class="bi bi-graph-up-arrow"></i>
+        </button>
+      </td>
       <td>
         <button class="btn btn-sm btn-primary" (click)="evaluarAlumno(alumno)">
           <i class="bi bi-clipboard2-check"></i>

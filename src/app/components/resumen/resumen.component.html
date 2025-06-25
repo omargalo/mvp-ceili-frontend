@@ -1,0 +1,36 @@
+<h2 class="mb-3">
+  Resumen de Evaluaciones de:
+  <span class="text-primary">{{ nombreAlumno() || 'Alumno' }}</span>
+</h2>
+
+@if (loading) {
+  <div class="text-center">
+    <div class="spinner-border text-primary"></div>
+    <div>Cargando evaluaciones...</div>
+  </div>
+}
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+
+@if (!loading && !error) {
+  <table class="table table-bordered table-sm">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Observación Docente</th>
+        <th># Aspectos</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (ev of evaluacionesFiltradas(); track ev.id) {
+        <tr>
+          <td>{{ ev.fecha | date:'shortDate' }}</td>
+          <td>{{ ev.observacionDocente }}</td>
+          <td>{{ ev.aspectos.length }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
