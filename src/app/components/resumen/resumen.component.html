@@ -4,33 +4,74 @@
 </h2>
 
 @if (loading) {
-  <div class="text-center">
-    <div class="spinner-border text-primary"></div>
-    <div>Cargando evaluaciones...</div>
-  </div>
+<div class="text-center">
+  <div class="spinner-border text-primary"></div>
+  <div>Cargando evaluaciones...</div>
+</div>
 }
 
 @if (error) {
-  <div class="alert alert-danger">{{ error }}</div>
+<div class="alert alert-danger">{{ error }}</div>
 }
 
 @if (!loading && !error) {
-  <table class="table table-bordered table-sm">
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th>Observación Docente</th>
-        <th># Aspectos</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (ev of evaluacionesFiltradas(); track ev.id) {
-        <tr>
-          <td>{{ ev.fecha | date:'shortDate' }}</td>
-          <td>{{ ev.observacionDocente }}</td>
-          <td>{{ ev.aspectos.length }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+<table class="table table-bordered table-sm">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Observación Docente</th>
+      <th># Aspectos</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (ev of evaluacionesFiltradas(); track ev.id) {
+    <tr>
+      <td>{{ ev.fecha | date:'shortDate' }}</td>
+      <td>{{ ev.observacionDocente }}</td>
+      <td>{{ ev.aspectos.length }}</td>
+    </tr>
+    }
+  </tbody>
+</table>
+}
+
+<div class="mb-3">
+  <span class="fw-bold">Riesgo Global:</span>
+  <span [ngClass]="{
+    'text-success': nivelGlobal() === 'Bajo',
+    'text-warning': nivelGlobal() === 'Medio',
+    'text-danger': nivelGlobal() === 'Alto'
+  }">
+    {{ nivelGlobal() }}
+  </span>
+</div>
+
+@if (evaluacionesFiltradas().length > 0) {
+<div class="mb-4">
+  <h4>Indicadores por Categoría</h4>
+  @for (cat of categorias; track cat) {
+  <div class="mb-2 d-flex align-items-center gap-3">
+    <div class="fw-bold" style="min-width: 200px;">{{ cat }}</div>
+    <div class="badge" [ngClass]="{
+           'bg-success': semaforoCategoria()[cat] === 'Bajo',
+           'bg-warning text-dark': semaforoCategoria()[cat] === 'Medio',
+           'bg-danger': semaforoCategoria()[cat] === 'Alto'
+         }" style="font-size: 1.1em; min-width: 80px;">
+      <i class="bi" [ngClass]="{
+          'bi-check-circle': semaforoCategoria()[cat] === 'Bajo',
+          'bi-exclamation-triangle': semaforoCategoria()[cat] === 'Medio',
+          'bi-exclamation-octagon': semaforoCategoria()[cat] === 'Alto'
+        }" style="font-size: 1.2em;">
+      </i>
+      <span class="ms-2">{{ semaforoCategoria()[cat] }}</span>
+    </div>
+    <!-- (opcional) Detalle: -->
+    <span class="text-secondary small ms-2">
+      Bajo: {{ kpiPorCategoria()[cat].Bajo }},
+      Medio: {{ kpiPorCategoria()[cat].Medio }},
+      Alto: {{ kpiPorCategoria()[cat].Alto }}
+    </span>
+  </div>}
+
+</div>
 }

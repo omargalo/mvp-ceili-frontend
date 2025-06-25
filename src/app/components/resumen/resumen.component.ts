@@ -2,8 +2,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, signal, computed, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 interface AspectoEvaluado {
+  categoria: string;
   nombre: string;
   riesgo: 'Bajo' | 'Medio' | 'Alto';
 }
@@ -19,7 +21,7 @@ interface EvaluacionResumenDto {
 @Component({
   selector: 'app-resumen',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, NgClass],
   templateUrl: './resumen.component.html',
 })
 export class ResumenComponent implements OnInit {
@@ -27,6 +29,13 @@ export class ResumenComponent implements OnInit {
   alumnoId = signal<number | null>(null);
   loading = false;
   error = '';
+  categorias = [
+    'Desempeño Académico',
+    'Socioemocional',
+    'Relaciones Interpersonales',
+    'Hábitos y Rutinas',
+    'Acompañamiento Familiar',
+  ];
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
@@ -53,11 +62,62 @@ export class ResumenComponent implements OnInit {
   evaluacionesFiltradas = computed(() => {
     const id = this.alumnoId();
     if (!id) return [];
-    return this.evaluaciones().filter(ev => ev.alumnoId === id);
+    return this.evaluaciones().filter((ev) => ev.alumnoId === id);
   });
 
   nombreAlumno = computed(() => {
     const lista = this.evaluacionesFiltradas();
     return lista.length > 0 ? lista[0].alumnoNombre : '';
+  });
+
+  // Signal: agrupa y cuenta aspectos por riesgo y por categoría
+  kpiPorCategoria = computed(() => {
+    const evals = this.evaluacionesFiltradas();
+    const todosAspectos = evals.flatMap((ev) => ev.aspectos);
+
+    const resumen: Record<
+      string,
+      { Bajo: number; Medio: number; Alto: number }
+    > = {};
+    for (const cat of this.categorias) {
+      resumen[cat] = { Bajo: 0, Medio: 0, Alto: 0 };
+    }
+
+    for (const asp of todosAspectos) {
+      if (asp.categoria && resumen[asp.categoria]) {
+        resumen[asp.categoria][asp.riesgo]++;
+      }
+    }
+    return resumen;
+  });
+
+  // Signal: calcula el nivel global de riesgo
+  nivelGlobal = computed(() => {
+    const resumen = this.kpiPorCategoria();
+    let totalBajo = 0,
+      totalMedio = 0,
+      totalAlto = 0;
+    for (const cat of this.categorias) {
+      totalBajo += resumen[cat].Bajo;
+      totalMedio += resumen[cat].Medio;
+      totalAlto += resumen[cat].Alto;
+    }
+    // Retorna el color dominante
+    if (totalAlto >= totalMedio && totalAlto >= totalBajo) return 'Alto';
+    if (totalMedio >= totalBajo) return 'Medio';
+    return 'Bajo';
+  });
+
+  // Devuelve "Alto", "Medio" o "Bajo" para cada categoría
+  semaforoCategoria = computed(() => {
+    const resumen = this.kpiPorCategoria();
+    const resultado: Record<string, 'Bajo' | 'Medio' | 'Alto'> = {};
+    for (const cat of this.categorias) {
+      const { Bajo, Medio, Alto } = resumen[cat];
+      if (Alto >= Medio && Alto >= Bajo && Alto > 0) resultado[cat] = 'Alto';
+      else if (Medio >= Bajo && Medio > 0) resultado[cat] = 'Medio';
+      else resultado[cat] = 'Bajo';
+    }
+    return resultado;
   });
 }

@@ -1,4 +1,5 @@
 export interface AspectoEvaluado {
+  categoria: string;
   nombre: string;
   riesgo: 'Bajo' | 'Medio' | 'Alto';
 }

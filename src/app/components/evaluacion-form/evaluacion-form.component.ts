@@ -27,7 +27,6 @@ export class EvaluationFormComponent implements OnInit {
   loading = false;
   error = '';
 
-  // CATEGORÍAS Y ASPECTOS
   categorias: CategoriaAspecto[] = [
     {
       nombre: 'Desempeño Académico',
@@ -36,8 +35,8 @@ export class EvaluationFormComponent implements OnInit {
         { nombre: 'Resolución de problemas matemáticos', riesgo: 'Bajo' },
         { nombre: 'Expresión escrita', riesgo: 'Bajo' },
         { nombre: 'Participación en proyectos/tareas', riesgo: 'Bajo' },
-        { nombre: 'Atención y concentración', riesgo: 'Bajo' }
-      ]
+        { nombre: 'Atención y concentración', riesgo: 'Bajo' },
+      ].map(a => ({ ...a, categoria: 'Desempeño Académico' } as AspectoEvaluado)),
     },
     {
       nombre: 'Socioemocional',
@@ -46,8 +45,8 @@ export class EvaluationFormComponent implements OnInit {
         { nombre: 'Autoestima', riesgo: 'Bajo' },
         { nombre: 'Gestión de emociones', riesgo: 'Bajo' },
         { nombre: 'Manejo de frustración', riesgo: 'Bajo' },
-        { nombre: 'Actitud ante el aprendizaje', riesgo: 'Bajo' }
-      ]
+        { nombre: 'Actitud ante el aprendizaje', riesgo: 'Bajo' },
+      ].map(a => ({ ...a, categoria: 'Socioemocional' } as AspectoEvaluado)),
     },
     {
       nombre: 'Relaciones Interpersonales',
@@ -56,8 +55,8 @@ export class EvaluationFormComponent implements OnInit {
         { nombre: 'Relación con docentes', riesgo: 'Bajo' },
         { nombre: 'Resolución de conflictos', riesgo: 'Bajo' },
         { nombre: 'Trabajo en equipo', riesgo: 'Bajo' },
-        { nombre: 'Integración al grupo', riesgo: 'Bajo' }
-      ]
+        { nombre: 'Integración al grupo', riesgo: 'Bajo' },
+      ].map(a => ({ ...a, categoria: 'Relaciones Interpersonales' } as AspectoEvaluado)),
     },
     {
       nombre: 'Hábitos y Rutinas',
@@ -66,8 +65,8 @@ export class EvaluationFormComponent implements OnInit {
         { nombre: 'Puntualidad', riesgo: 'Bajo' },
         { nombre: 'Cumplimiento de tareas', riesgo: 'Bajo' },
         { nombre: 'Organización de materiales', riesgo: 'Bajo' },
-        { nombre: 'Autonomía en el trabajo escolar', riesgo: 'Bajo' }
-      ]
+        { nombre: 'Autonomía en el trabajo escolar', riesgo: 'Bajo' },
+      ].map(a => ({ ...a, categoria: 'Hábitos y Rutinas' } as AspectoEvaluado)),
     },
     {
       nombre: 'Acompañamiento Familiar',
@@ -76,9 +75,9 @@ export class EvaluationFormComponent implements OnInit {
         { nombre: 'Interés y apoyo familiar', riesgo: 'Bajo' },
         { nombre: 'Estabilidad emocional en el hogar', riesgo: 'Bajo' },
         { nombre: 'Supervisión de tareas', riesgo: 'Bajo' },
-        { nombre: 'Participación en reuniones escolares', riesgo: 'Bajo' }
-      ]
-    }
+        { nombre: 'Participación en reuniones escolares', riesgo: 'Bajo' },
+      ].map(a => ({ ...a, categoria: 'Acompañamiento Familiar' } as AspectoEvaluado)),
+    },
   ];
 
   evaluacion: Evaluacion = {
@@ -115,8 +114,14 @@ export class EvaluationFormComponent implements OnInit {
   enviar() {
     if (!this.alumno) return;
 
-    // Junta todos los aspectos de todas las categorías en un solo arreglo plano
-    const aspectos: AspectoEvaluado[] = this.categorias.flatMap(c => c.aspectos);
+    // Junta todos los aspectos, cada uno con su categoria
+    const aspectos: AspectoEvaluado[] = this.categorias.flatMap((cat) =>
+      cat.aspectos.map((asp) => ({
+        categoria: cat.nombre,
+        nombre: asp.nombre,
+        riesgo: asp.riesgo,
+      }))
+    );
 
     const evaluacionPost = {
       alumnoId: this.alumno.id,
