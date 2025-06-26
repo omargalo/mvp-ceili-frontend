@@ -25,7 +25,7 @@ export class LoginComponent {
         // Guarda el token y usuario (localStorage, sessionStorage, etc.)
         localStorage.setItem('token', resp.token);
         localStorage.setItem('docente', JSON.stringify(resp.docente));
-        this.router.navigate(['/alumnos']);
+        this.router.navigate(['/dashboard']);
       },
       error: err => {
         this.loading = false;

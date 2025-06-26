@@ -1,12 +1,12 @@
 <h2 class="mb-3">
-  Resumen de Evaluaciones de:
+  Resumen de riesgos de:
   <span class="text-primary">{{ nombreAlumno() || 'Alumno' }}</span>
 </h2>
 
 @if (loading) {
 <div class="text-center">
   <div class="spinner-border text-primary"></div>
-  <div>Cargando evaluaciones...</div>
+  <div>Cargando...</div>
 </div>
 }
 
@@ -48,7 +48,7 @@
 
 @if (evaluacionesFiltradas().length > 0) {
 <div class="mb-4">
-  <h4>Indicadores por Categoría</h4>
+  <h4>Indicadores de riesgo:</h4>
   @for (cat of categorias; track cat) {
   <div class="mb-2 d-flex align-items-center gap-3">
     <div class="fw-bold" style="min-width: 200px;">{{ cat }}</div>

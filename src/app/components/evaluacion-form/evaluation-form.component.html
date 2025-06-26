@@ -7,7 +7,7 @@
 </div>
 }
 @else if (alumno) {
-<h4 class="text-info">Evaluación del alumno:</h4>
+<h4 class="text-info">Evaluación de riesgos del alumno:</h4>
 <div class="mb-4 d-flex flex-column flex-md-row align-items-md-center gap-3">
   <span class="fs-4 fw-bold" style="color: #20B2AA;">
     <i class="bi bi-person-circle"></i> {{ alumno.nombreCompleto }}
@@ -23,6 +23,16 @@
 @else {
 <h2 class="text-info">Evaluación del alumno</h2>
 }
+
+<div class="alert alert-success mb-2" style="font-size:1em;">
+  <b>¿Cómo interpretar los niveles?</b>
+  <br>
+  <span class="d-block ms-4">
+    <span class="fw-bold text-success">Bajo:</span> Sin riesgo, desempeño óptimo.<br>
+    <span class="fw-bold text-warning">Medio:</span> Presenta dificultades, requiere observación.<br>
+    <span class="fw-bold text-danger">Alto:</span> Riesgo alto, requiere atención.
+  </span>
+</div>
 
 <!-- Bootstrap Tabs -->
 <ul class="nav nav-tabs mb-3" id="categoriaTabs" role="tablist">
@@ -46,9 +56,9 @@
       <label><b>{{ asp.nombre }}</b></label>
       <select class="form-select" [(ngModel)]="cat.aspectos[aspIdx].riesgo" [name]="'riesgo-' + catIdx + '-' + aspIdx"
         required>
-        <option value="Bajo">Bajo</option>
-        <option value="Medio">Medio</option>
-        <option value="Alto">Alto</option>
+        <option value="Bajo" title="Sin riesgo, desempeño óptimo">Bajo</option>
+        <option value="Medio" title="Dificultad moderada, requiere observación">Medio</option>
+        <option value="Alto" title="Riesgo alto, requiere intervención">Alto</option>
       </select>
     </div>
     }
