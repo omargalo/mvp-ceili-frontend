@@ -14,6 +14,16 @@
 <div class="alert alert-danger">{{ error }}</div>
 }
 
+<div class="alert alert-success mb-2" style="font-size:1em;">
+  <b>¿Cómo interpretar los niveles?</b>
+  <br>
+  <span class="d-block ms-4">
+    <span class="fw-bold text-success">Bajo:</span> Sin riesgo, desempeño óptimo.<br>
+    <span class="fw-bold text-warning">Medio:</span> Presenta dificultades, requiere observación.<br>
+    <span class="fw-bold text-danger">Alto:</span> Riesgo alto, requiere atención.
+  </span>
+</div>
+
 @if (!loading && !error) {
 <table class="table table-bordered table-sm">
   <thead>

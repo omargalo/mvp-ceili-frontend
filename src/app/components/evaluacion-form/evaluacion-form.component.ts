@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Evaluacion, AspectoEvaluado } from '../../models/evaluacion.model';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 interface CategoriaAspecto {
   nombre: string;
@@ -87,7 +88,7 @@ export class EvaluationFormComponent implements OnInit {
     observacionDocente: '',
   };
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -133,7 +134,7 @@ export class EvaluationFormComponent implements OnInit {
     this.http.post('/api/evaluaciones', evaluacionPost).subscribe({
       next: (resp) => {
         alert('¡Evaluación enviada correctamente!');
-        // Opcional: limpiar formulario, redirigir, etc.
+        this.router.navigate(['/alumnos']);
       },
       error: (err) => {
         alert('Error al enviar la evaluación.');
