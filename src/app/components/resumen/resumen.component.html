@@ -56,6 +56,7 @@
   </span>
 </div>
 
+<!-- Indicadores de riesgo por categoría -->
 @if (evaluacionesFiltradas().length > 0) {
 <div class="mb-4">
   <h4>Indicadores de riesgo:</h4>
@@ -82,6 +83,30 @@
       Alto: {{ kpiPorCategoria()[cat].Alto }}
     </span>
   </div>}
-
 </div>
 }
+
+<!-- Retroalimentación IA -->
+<div class="mb-3">
+  <h5>
+    <i class="bi bi-lightbulb-fill text-info"></i> Análisis con IA
+  </h5>
+  @if (cargandoRetro) {
+    <span class="spinner-border spinner-border-sm"></span> Analizando con IA...
+  }
+  @else if (retro) {
+    <div class="card" style="max-height: 350px; overflow-y: auto; white-space: pre-line;">
+      <div class="card-body">
+        {{ retro.texto }}
+      </div>
+    </div>
+    <small class="text-muted">Generado el {{ retro.fechaGeneracion | date:'short' }}</small>
+  }
+  @else {
+    <em class="text-muted">Aún no se ha generado un análisis con IA para esta evaluación.</em>
+    <button class="btn btn-sm btn-primary ms-2" (click)="generarRetro()"
+            [disabled]="cargandoRetro">
+      <i class="bi bi-cpu"></i> Generar análisis IA
+    </button>
+  }
+</div>

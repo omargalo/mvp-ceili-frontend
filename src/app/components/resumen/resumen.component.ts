@@ -3,6 +3,10 @@ import { Component, signal, computed, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { NgClass } from '@angular/common';
+import {
+  RetroalimentacionService,
+  RetroalimentacionIA,
+} from '../../services/retroalimentacion.service';
 
 interface AspectoEvaluado {
   categoria: string;
@@ -36,8 +40,14 @@ export class ResumenComponent implements OnInit {
     'Hábitos y Rutinas',
     'Acompañamiento Familiar',
   ];
+  retro: RetroalimentacionIA | null = null;
+  cargandoRetro = false;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private retroService: RetroalimentacionService
+  ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -45,12 +55,22 @@ export class ResumenComponent implements OnInit {
     this.cargarEvaluaciones();
   }
 
-  cargarEvaluaciones() {
+  async cargarEvaluaciones() {
     this.loading = true;
     this.http.get<EvaluacionResumenDto[]>('/api/evaluaciones').subscribe({
-      next: (res) => {
+      next: async (res) => {
         this.evaluaciones.set(res);
         this.loading = false;
+        // Busca la última evaluación de este alumno
+        const lista = this.evaluacionesFiltradas();
+        if (lista.length > 0) {
+          const ultimaEv = lista[0]; // o la que decidas
+          this.cargandoRetro = true;
+          this.retro = await this.retroService.getPorEvaluacion(ultimaEv.id);
+          this.cargandoRetro = false;
+        } else {
+          this.retro = null;
+        }
       },
       error: (err) => {
         this.error = 'No se pudieron cargar las evaluaciones.';
@@ -120,4 +140,14 @@ export class ResumenComponent implements OnInit {
     }
     return resultado;
   });
+
+  async generarRetro() {
+    if (!this.evaluacionesFiltradas().length) return;
+    const ultimaEv = this.evaluacionesFiltradas()[0];
+    this.cargandoRetro = true;
+    this.retro = await this.retroService.generarRetroalimentacionIA(
+      ultimaEv.id
+    );
+    this.cargandoRetro = false;
+  }
 }
