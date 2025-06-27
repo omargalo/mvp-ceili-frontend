@@ -1,0 +1,10 @@
+.risk-btn-anim {
+  animation: pulse 3s infinite;
+  transition: transform 0.9s, box-shadow 0.5s;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(40,167,69, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(40,167,69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(40,167,69, 0); }
+}

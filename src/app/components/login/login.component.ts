@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
   selector: 'app-login',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   credenciales: LoginDocenteDto = { email: '', password: '' };
@@ -20,17 +21,21 @@ export class LoginComponent {
     this.error = '';
     this.loading = true;
     this.auth.login(this.credenciales).subscribe({
-      next: resp => {
+      next: (resp) => {
         this.loading = false;
         // Guarda el token y usuario (localStorage, sessionStorage, etc.)
         localStorage.setItem('token', resp.token);
         localStorage.setItem('docente', JSON.stringify(resp.docente));
         this.router.navigate(['/dashboard']);
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         this.error = err.error || 'Correo o contraseña incorrectos.';
-      }
+      },
     });
+  }
+
+  redirigirRegistro() {
+    this.router.navigate(['/register']);
   }
 }
