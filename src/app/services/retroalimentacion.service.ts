@@ -24,8 +24,12 @@ export class RetroalimentacionService {
           `/api/retroalimentacionia/evaluacion/${evaluacionId}`
         )
       );
-    } catch (err) {
-      return null;
+    } catch (err: any) {
+      // Si es un 404 simplemente devuelve null (retro no existe)
+      if (err.status === 404) return null;
+      // Otros errores puedes loguearlos o mostrar diferente mensaje
+      console.error('Error obteniendo retroalimentación IA:', err);
+      throw err; // o return null si prefieres ocultar todo
     }
   }
 
