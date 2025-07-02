@@ -38,4 +38,8 @@ export class LoginComponent {
   redirigirRegistro() {
     this.router.navigate(['/register']);
   }
+
+  resetPassword() {
+    this.router.navigate(['/reset-password']);
+  }
 }

@@ -108,6 +108,10 @@ h2, h3, h1 {
   font-weight: 600;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 @media (max-width: 600px) {
   form {
     padding: 1rem;
